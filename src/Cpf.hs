@@ -4,11 +4,13 @@ module Cpf
     , decode
     ) where
 
+import Data.Char (isSpace)
+
 type CPF = [Int]
 
 multByPred :: [Int] -> Int -> [Int]
 multByPred (x:xs) c = x * c:multByPred xs (c-1)
-multByPred [] _ = [0]
+multByPred [] _ = []
 
 -- firstDigit assumes that cpfNum is well-formed
 -- (!!) is making me itch!firstDigit :: [Int] -> Bool
@@ -24,6 +26,19 @@ cmpSucc (x:xs) = if xs /= []
                     then (x == xs !! 0):cmpSucc xs 
                     else []
 
+replace :: Char -> Char -> String -> String
+replace old new = map (\c -> if c == old then new else c)
+
+rmWhitespaces :: String -> String
+rmWhitespaces = filter (not . isSpace)
+
+normalize :: String -> String
+normalize = (rmWhitespaces . (replace '.' ' ' . replace '-' ' '))
+
+convert :: String -> CPF
+convert (x:xs) = (read [x] :: Int):convert xs
+convert [] = []
+
 valid :: CPF -> Bool
 valid cpfNum
     | length cpfNum /= 11 = False
@@ -34,4 +49,4 @@ encode :: CPF -> String
 encode cpfNum = undefined
 
 decode :: String -> CPF
-decode cpfStr = undefined
+decode = (convert . normalize)
