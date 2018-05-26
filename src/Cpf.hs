@@ -4,7 +4,7 @@ module Cpf
     , decode
     ) where
 
-import Data.Char (isSpace)
+import Data.Char (isNumber)
 
 type CPF = [Int]
 
@@ -26,14 +26,8 @@ cmpSucc (x:xs) = if xs /= []
                     then (x == xs !! 0):cmpSucc xs 
                     else []
 
-replace :: Char -> Char -> String -> String
-replace old new = map (\c -> if c == old then new else c)
-
-rmWhitespaces :: String -> String
-rmWhitespaces = filter (not . isSpace)
-
 normalize :: String -> String
-normalize = (rmWhitespaces . (replace '.' ' ' . replace '-' ' '))
+normalize = filter isNumber
 
 convert :: String -> CPF
 convert (x:xs) = (read [x] :: Int):convert xs
