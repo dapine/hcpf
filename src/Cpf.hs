@@ -33,6 +33,13 @@ convert :: String -> CPF
 convert (x:xs) = (read [x] :: Int):convert xs
 convert [] = []
 
+slice :: Int -> Int -> [a] -> [a]
+slice s t xs = take t $ drop s xs
+
+toString :: Show a => [a] -> String
+toString (x:xs) = show x ++ toString xs
+toString [] = []
+
 valid :: CPF -> Bool
 valid cpfNum
     | length cpfNum /= 11 = False
@@ -40,7 +47,11 @@ valid cpfNum
     | otherwise = False
 
 encode :: CPF -> String
-encode cpfNum = undefined
+encode cpfNum = fstTriplet ++ "." ++ sndTriplet ++ "." ++ thrTriplet ++ "-" ++ endDigits where
+    fstTriplet = toString $ slice 0 3 cpfNum
+    sndTriplet = toString $ slice 3 3 cpfNum
+    thrTriplet = toString $ slice 6 3 cpfNum
+    endDigits = toString $ slice 9 2 cpfNum
 
 decode :: String -> CPF
 decode = (convert . normalize)
