@@ -12,15 +12,22 @@ multByPred :: [Int] -> Int -> [Int]
 multByPred (x:xs) c = x * c:multByPred xs (c-1)
 multByPred [] _ = []
 
--- firstDigit assumes that cpfNum is well-formed
--- (!!) is making me itch!firstDigit :: [Int] -> Bool
--- XXX: If rem == 10, compare against 0
-firstDigit cpfNum = rem ((sum $ multByPred (take 9 cpfNum) 10) * 10) 11 == cpfNum !! 9
+-- compareDigit takes a cpfNum (CPF), i (index to take from original cpfNum) 
+-- , ci (index of number to compare against), x (counter for multByPred)
+-- compareDigit assumes that cpfNum is well-formed
+compareDigit :: [Int] -> Int -> Int -> Int -> Bool
+compareDigit cpfNum i ci x = case remainder of
+                             10 -> 0 == cpfNum !! ci
+                             _ -> remainder == cpfNum !! ci
+                             where remainder = rem ((sum $ multByPred (take i cpfNum) x) * 10) 11
 
--- secondDigit assumes that cpfNum is well-formed
--- XXX: If rem == 10, compare against 0
+-- compares remainder of the firsts nine digits against first digit after "-"
+firstDigit :: [Int] -> Bool
+firstDigit cpfNum = compareDigit cpfNum 9 9 10
+
+-- compares remainder of the firsts ten digits against second digit after "-"
 secondDigit :: [Int] -> Bool
-secondDigit cpfNum = rem ((sum $ multByPred (take 10 cpfNum) 11) * 10) 11 == cpfNum !! 10 
+secondDigit cpfNum = compareDigit cpfNum 10 10 11
 
 cmpSucc (x:xs) = if xs /= []
                     then (x == xs !! 0):cmpSucc xs 
