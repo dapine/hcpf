@@ -33,8 +33,11 @@ cmpSucc (x:xs) = if xs /= []
                     then (x == xs !! 0):cmpSucc xs 
                     else []
 
+isDotOrDash :: Char -> Bool
+isDotOrDash c = (c == '.') || (c == '-')
+
 normalize :: String -> String
-normalize = filter isNumber
+normalize = filter (not . isDotOrDash)
 
 convert :: String -> CPF
 convert (x:xs) = (read [x] :: Int):convert xs
