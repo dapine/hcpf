@@ -25,17 +25,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  hcpf-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - hcpf
-
 tests:
   hcpf-test:
     main:                Spec.hs
@@ -46,3 +35,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hcpf
+    - hspec
